@@ -12,7 +12,7 @@ class ConnexionController extends Controller
      * @return type Vue formLogin ou home
      */
     public function logIn(Request $request) {
-        $login = Session::get('login');
+        $login = $request->input('login'); 
         $pwd = $request->input('pwd'); 
         $gsbFrais = new GsbFrais();
         $res = $gsbFrais->getInfosVisiteur($login,$pwd);
