@@ -1,5 +1,6 @@
 <?php
 //Commentaire2
+// Commentaire de John
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
