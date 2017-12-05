@@ -259,6 +259,9 @@ public function getInfosVisiteur($login, $mdp){
         DB::update($req, ['newmdp'=>$newmdp ,'login'=>$login]);
     
 } 
-        
+public function InsertVisiteur($id,$nom,$prenom,$login,$mdp,$adresse,$telephone,$adresseMail,$cp,$ville,$dateEmbauche,$statut)
+{
+        $req ="INSERT INTO visiteur values(:id,:nom,:prenom,:login,:mdp,:adresse,:telephone,:adresseMail,:cp,:ville,:dateEmbauche,:statut)";
+        DB::insert($req,['id'=>$id,'nom'=>$nom,'prenom'=>$prenom,'login'=>$login,'mdp'=>$mdp,'adresse'=>$adresse,'telephone'=>$telephone,'adresseMail'=>$adresseMail,'cp'=>$cp,'ville'=>$ville,'dateEmbauche'=>$dateEmbauche,':statut'=>$statut]);
 }
-?>
+}
