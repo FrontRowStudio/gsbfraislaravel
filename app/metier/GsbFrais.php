@@ -258,7 +258,16 @@ public function getInfosVisiteur($login, $mdp){
          $req = "UPDATE visiteur set mdp= :newmdp where login = :login ";
         DB::update($req, ['newmdp'=>$newmdp ,'login'=>$login]);
     
-} 
+}
+
+// Fabien
+
+        public function Aff_Visiteurs()
+        {
+            $dateJour = date('Y-m-d');
+            $req = "SELECT DISTINCT prenom, nom, idEtat FROM visiteur INNER JOIN fichefrais ON id = idVisiteur WHERE idEtat = RB OR idEtat = VA AND DATEDIFF( month , dateModif , $dateJour ) <= 12";
+            $lesVisiteurs = DB::select($req, ['idVisiteur'=>$idVisiteur,'mois'=>$mois]);
+        }
         
 }
 ?>
