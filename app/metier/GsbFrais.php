@@ -270,7 +270,21 @@ public function getInfosVisiteur($login, $mdp){
          $req = "UPDATE visiteur set mdp= :newmdp where login = :login ";
         DB::update($req, ['newmdp'=>$newmdp ,'login'=>$login]);
     
-} 
-        
 }
-?>
+
+// Fabien
+
+        public function Aff_Visiteurs()
+        {
+            $dateJour = date('Y-m-d');
+            $req = "SELECT DISTINCT prenom, nom, idEtat FROM visiteur INNER JOIN fichefrais ON id = idVisiteur WHERE idEtat = RB OR idEtat = VA AND DATEDIFF( month , dateModif , $dateJour ) <= 12";
+            $lesVisiteurs = DB::select($req, ['idVisiteur'=>$idVisiteur,'mois'=>$mois]);
+        }
+        
+} 
+public function InsertVisiteur($id,$nom,$prenom,$login,$mdp,$adresse,$telephone,$adresseMail,$cp,$ville,$dateEmbauche,$statut)
+{
+        $req ="INSERT INTO visiteur values(:id,:nom,:prenom,:login,:mdp,:adresse,:telephone,:adresseMail,:cp,:ville,:dateEmbauche,:statut)";
+        DB::insert($req,['id'=>$id,'nom'=>$nom,'prenom'=>$prenom,'login'=>$login,'mdp'=>$mdp,'adresse'=>$adresse,'telephone'=>$telephone,'adresseMail'=>$adresseMail,'cp'=>$cp,'ville'=>$ville,'dateEmbauche'=>$dateEmbauche,':statut'=>$statut]);
+}
+}
