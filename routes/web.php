@@ -54,6 +54,10 @@ Route::get('/supprimerFraisHorsForfait/{idFrais}', 'FraisHorsForfaitController@s
 //Suivre Frais
 Route::get('/SuivreFrais', 'SuivreFraisController@GetSuivreFrais');
 
+// Affiche Formulaire Créer Visiteur
+Route::get('/formCreerVisiteur', 'CreerVisiteurController@AffFormCreerVisiteur');
+
+Route::post('/formCreerVisiteur', 'CreerVisiteurController@InsertVisiteur');
 //afficher formulaire modif mdp
 /*Route::get('/modifMdp', function (){
     return view('formModifMdp');
