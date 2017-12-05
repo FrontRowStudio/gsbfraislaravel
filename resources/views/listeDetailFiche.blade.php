@@ -43,7 +43,11 @@
         </table>
         <div class="form-group">
             <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
-                <a href="{{ url('/getListeFrais')}}" ><button type="button" class="btn btn-default btn-primary" >Retour</button></a>                
+                @if(Session::get('statut') == 'V')
+                <a href="{{ url('/getListeFrais')}}" ><button type="button" class="btn btn-default btn-primary" >Retour</button></a>          
+                @else
+                <a href="{{ url('/ValiderFicheFrais')}}" ><button type="button" class="btn btn-default btn-primary" >Retour</button></a>          
+                @endif
             </div>           
         </div>  
         @include('error')

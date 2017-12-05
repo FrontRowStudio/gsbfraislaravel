@@ -92,6 +92,18 @@ public function getInfosVisiteur($login, $mdp){
 		}
 		
 	}
+        
+        /**
+         * 
+         * 
+         */
+	public function getVisiteurFicheCloturer()
+                {
+		$req = "SELECT id,nom,prenom,fichefrais.mois,fichefrais.montantValide FROM `visiteur` INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur where fichefrais.idEtat = 'CL' ORDER BY prenom ASC";
+		$lesLignes = DB::select($req);
+		return $lesLignes;
+	}
+        
 /**
  * met à jour le nombre de justificatifs de la table ficheFrais
  * pour le mois et le visiteur concerné
