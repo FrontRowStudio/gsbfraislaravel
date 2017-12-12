@@ -14,8 +14,15 @@ class SuivreFraisController extends Controller
         $erreur="";
         $gsbFrais = new GsbFrais();
         $vis = $gsbFrais->Aff_Visiteurs();
-        return view('SuivreFrais', compact('vis'));
-        
+        return view('SuivreFrais', compact('vis'));   
+    }
+    
+    public function GetSuivreFrais_2($id)
+    {
+        $erreur="";
+        $gsbFrais = new GsbFrais();
+        $Info = $gsbFrais->Aff_Info_Visiteurs($id);
+        return view('SuivreFrais_2', compact('Info'));   
     }
     
 }

@@ -277,8 +277,18 @@ public function getInfosVisiteur($login, $mdp){
         public function Aff_Visiteurs()
         {
             $dateJour = date('Y-m-d');
-            $req = "SELECT DISTINCT prenom, nom, idEtat FROM visiteur INNER JOIN fichefrais ON id = idVisiteur WHERE idEtat = RB OR idEtat = VA AND DATEDIFF( month , dateModif , $dateJour ) <= 12";
-            $lesVisiteurs = DB::select($req, ['idVisiteur'=>$idVisiteur,'mois'=>$mois]);
+            echo $dateJour;
+            $req = "SELECT DISTINCT id, prenom, nom FROM visiteur INNER JOIN fichefrais ON id = idVisiteur WHERE mois > 201612 AND (idEtat = 'RB' OR idEtat = 'VA')";
+            $Aff_Vis = DB::select($req);
+            return $Aff_Vis;
+        }
+        
+        public function Aff_Info_Visiteurs($id)
+        {
+            $dateJour = date('Y-m-d');
+            $req = "SELECT idVisiteur, mois, dateModif, idEtat, montantValide FROM fichefrais WHERE mois > 201612 AND idVisiteur = :id_Vis";
+            $Aff_Info = DB::select($req, ['id_Vis'=>$id]);
+            return $Aff_Info;
         }
         
     public function InsertVisiteur($id,$nom,$prenom,$login,$mdp,$adresse,$telephone,$adresseMail,$cp,$ville,$dateEmbauche,$statut)
