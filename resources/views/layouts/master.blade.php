@@ -48,11 +48,8 @@
                     <li><a href="{{ url('/modifMdp') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Modifier mot de passe</a></li>
 @else
                             <li><a href="{{url("/ValiderFicheFrais") }}" data-toggle="collapse" data-target=".navbar-collapse.in">Valider fiche de frais</a></li>
-                            <li><a href="{{ url('/saisirFraisForfait') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Valider fiche de frais</a></li>
                             <li><a href="{{ url('/SuivreFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Suivre fiche de frais</a></li>
-                            <li><a href="{{ url('/getListeFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Suivre fiche de frais</a></li>
-                            <li><a href="{{ url('/formCreerVisiteur') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Créer nouveau visiteur</a></li>
-                            
+                            <li><a href="{{ url('/formCreerVisiteur') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Créer nouveau visiteur</a></li>                           
  @endif
                         </ul>  
                         <ul class="nav navbar-nav navbar-right">                             
