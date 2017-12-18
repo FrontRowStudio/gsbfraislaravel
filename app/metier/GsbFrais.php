@@ -108,6 +108,31 @@ public function getInfosVisiteur($login, $mdp){
  * met à jour le nombre de justificatifs de la table ficheFrais
  * pour le mois et le visiteur concerné
  
+         * 
+         * 
+         */
+	public function getVisiteurSelectFicheCloturer($uneID,$unMois)
+                    {
+		$req = "SELECT id,nom,prenom,fichefrais.mois,fichefrais.montantValide,nbJustificatifs,dateModif FROM `visiteur` INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur where fichefrais.idEtat = 'CL' AND id = '". $uneID ."' AND fichefrais.mois = '" . $unMois . "' ORDER BY prenom ASC";
+		$lesLignes = DB::select($req);
+		return $lesLignes;
+                    }
+                    
+        /**
+         * 
+         * 
+         */
+	public function TerminerFicheFraisVisiteur($ID,$Mois,$Montant)
+                    {
+		$req = "UPDATE fichefrais
+                                    SET `montantValide` = '". $Montant . "', `dateModif` = DATE( NOW() ), `idEtat` = 'VA'
+                                    WHERE idVisiteur like '" . $ID . "' and mois like ". $Mois;
+		$lesLignes = DB::select($req);
+		return $lesLignes;
+                    }                    
+        
+/** 
+ 
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
 */

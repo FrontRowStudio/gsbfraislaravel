@@ -46,7 +46,8 @@
                 @if(Session::get('statut') == 'V')
                 <a href="{{ url('/getListeFrais')}}" ><button type="button" class="btn btn-default btn-primary" >Retour</button></a>          
                 @else
-                <a href="{{ url('/ValiderFicheFrais')}}" ><button type="button" class="btn btn-default btn-primary" >Retour</button></a>          
+                <a href="{{ url('/ValiderFicheFrais')}}" ><button type="button" class="btn btn-default btn-primary" >Retour</button></a>      
+                
                 @endif
             </div>           
         </div>  

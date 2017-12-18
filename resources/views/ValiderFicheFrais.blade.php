@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('content')
 {!! Form::open(['url' => 'ValiderFicheFrais']) !!}  
+@if($erreur == "")
         <table class="table table-bordered table-striped table-responsive">
             <thead>
                 <tr>
@@ -21,6 +22,18 @@
                         <span class="glyphicon glyphicon-eye-open" data-toggle="tooltip" data-placement="top" title="Voir"></span></a></td>
             </tr>
             @endforeach
+            @if(isset($Complet))
+            
+        <div class="alert alert-success">
+            <p> {{$Complet}}</p>
+        </div>            
+            @endif            
         </table>
+@else
+<div class="alert alert-info"
+<p>{{$erreur}}</p>
+</div>
+
+@endif
 {!! Form::close() !!}
 @stop

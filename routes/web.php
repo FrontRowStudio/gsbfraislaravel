@@ -57,7 +57,9 @@ Route::get('/ValiderFicheFrais','ValiderFraisController@ValiderFrais');
 // Voir le détail de la fiche de frais pour un visiteur
 Route::get('/ValiderFicheFrais/{id}/{mois}','ValiderFraisController@DetailsFrais');
 
-//Suivre Frais, affichage des visiteurs
+Route::get('TerminerFrais/{id}/{mois}/{Montant}','ValiderFraisController@TerminerFicheFrais');
+
+//Suivre Frais
 Route::get('/SuivreFrais', 'SuivreFraisController@GetSuivreFrais');
 
 //Suivre Frais 2, affichage des visiteurs (accès aux informations d'un visiteur sélectionné)
