@@ -43,24 +43,6 @@ public function getInfosVisiteur($login, $mdp){
 //            }
             return $lesLignes; 
 	}
-/**
- * Retourne sous forme d'un tableau associatif toutes les lignes de frais au forfait
- * concernées par les deux arguments
- 
- * @param $idVisiteur 
- * @param $mois sous la forme aaaamm
- * @return un objet contenant les frais forfait du mois
-*/
-	public function getLesFraisForfait($idVisiteur, $mois){
-		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, ligneFraisForfait.mois as mois,
-		lignefraisforfait.quantite as quantite, fraisforfait.montant as MontantUnit from lignefraisforfait inner join fraisforfait 
-		on fraisforfait.id = lignefraisforfait.idfraisforfait
-		where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois=:mois
-		order by lignefraisforfait.idfraisforfait";	
-//                echo $req;
-                $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
-		return $lesLignes; 
-	}
         
 /**
  * Calcul le montant total des frais forfait et hors forfait
@@ -104,6 +86,50 @@ public function getInfosVisiteur($login, $mdp){
                                 DB::update($req);
                             }
         
+        /**
+         * 
+         * 
+         */
+	public function getVisiteurFicheCloturer()
+                {
+		$req = "SELECT id,nom,prenom,fichefrais.mois,fichefrais.montantValide FROM `visiteur` INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur where fichefrais.idEtat = 'CL' ORDER BY prenom ASC";
+		$lesLignes = DB::select($req);
+		return $lesLignes;
+	}                 
+        
+/**
+ * Retourne les fiches de frais d'un visiteur à partir d'un certain mois
+ * @param $idVisiteur 
+ * @param $mois mois début
+ * @return un objet avec les fiches de frais de la dernière année
+*/
+	public function getLesFrais($idVisiteur, $mois)
+                {
+            $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
+//            for ($i=0; $i<$nbLignes; $i++){
+//                    $date = $lesLignes[$i]['date'];
+//                    $lesLignes[$i]['date'] =  dateAnglaisVersFrancais($date);
+//            }
+            return $lesLignes; 
+	}
+/**
+ * Retourne sous forme d'un tableau associatif toutes les lignes de frais au forfait
+ * concernées par les deux arguments
+ 
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+ * @return un objet contenant les frais forfait du mois
+*/
+	public function getLesFraisForfait($idVisiteur, $mois){
+		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, ligneFraisForfait.mois as mois,
+		lignefraisforfait.quantite as quantite, fraisforfait.montant as MontantUnit from lignefraisforfait inner join fraisforfait 
+		on fraisforfait.id = lignefraisforfait.idfraisforfait
+		where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois=:mois
+		order by lignefraisforfait.idfraisforfait";	
+//                echo $req;
+                $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
+		return $lesLignes; 
+	}
 /**
  * Retourne tous les id de la table FraisForfait
  * @return un objet avec les données de la table frais forfait
@@ -134,17 +160,6 @@ public function getInfosVisiteur($login, $mdp){
                         DB::update($req, ['qte'=>$qte, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois, 'unIdFrais'=>$unIdFrais]);
 		}
 		
-	}
-        
-        /**
-         * 
-         * 
-         */
-	public function getVisiteurFicheCloturer()
-                {
-		$req = "SELECT id,nom,prenom,fichefrais.mois,fichefrais.montantValide FROM `visiteur` INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur where fichefrais.idEtat = 'CL' ORDER BY prenom ASC";
-		$lesLignes = DB::select($req);
-		return $lesLignes;
 	}
         
 /**
@@ -293,20 +308,6 @@ public function getInfosVisiteur($login, $mdp){
 	public function supprimerFraisHorsForfait($idFrais){
 		$req = "delete from lignefraishorsforfait where lignefraishorsforfait.id = :idFrais ";
 		DB::delete($req, ['idFrais'=>$idFrais]);
-	}
-/**
- * Retourne les fiches de frais d'un visiteur à partir d'un certain mois
- * @param $idVisiteur 
- * @param $mois mois début
- * @return un objet avec les fiches de frais de la dernière année
-*/
-	public function getLesFrais($idVisiteur, $mois)
-                {
-		$req = "select * from  fichefrais where idvisiteur = :idVisiteur
-                and  mois >= :mois   
-		order by fichefrais.mois desc ";
-                $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
-                return $lesLignes;
 	}
 /**
  * Retourne les informations d'une fiche de frais d'un visiteur pour un mois donné
