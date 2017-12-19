@@ -18,6 +18,7 @@ class modifMdpController extends Controller
          $erreur="";
         $login = Session::get('login');
         $pwd = $request->input('pwd');   
+        $pwd = md5($pwd);
         $gsbFrais = new GsbFrais();
         $res = $gsbFrais->getInfosVisiteur($login,$pwd);
         if(empty($res))
@@ -27,13 +28,17 @@ class modifMdpController extends Controller
              }
         
                 
-         $npwd = $request->input('npwd');   
+         $npwd = $request->input('npwd');
+         $npwd = md5($npwd);
          $n2pwd = $request->input('n2pwd'); 
+         $n2pwd = md5($n2pwd);
           
           if($npwd == $n2pwd)
           {
               $gsbFrais->MiseajourBDD($login,$npwd);
-               return redirect()->back()->with('status', 'Mise à jour effectuée!');
+              
+              $succes = "Mis à jour avec succés !";
+               return view('formModifMdp', compact('erreur','succes'));
           }
            else
            {

@@ -7,7 +7,7 @@
         <div class="form-group">
             <label class="col-md-3 control-label">Mot de passe : </label>
             <div class="col-md-6 col-md-3">
-                <input type="password" name="pwd" ng-model="pwd" class="form-control" value="Votre mot de passe" required>
+                <input type="password" name="pwd" ng-model="pwd" class="form-control" value="Votre mot de passe" placeholder="Votre mot de passe actuel" required>
             </div>
         </div>
         <div class="form-group">
@@ -29,6 +29,12 @@
         <div class="col-md-6 col-md-offset-3">
             @include('error')
         </div>
+            @if (isset($succes))
+            <div class="alert alert-success">
+            <br><br>
+            {{$succes}}
+        </div>
+            @endif
     </div>
 </div>
 {!! Form::close() !!}
