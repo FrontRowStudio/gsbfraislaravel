@@ -69,6 +69,13 @@ Route::get('/SuivreFrais_2/{id}', 'SuivreFraisController@GetSuivreFrais_2');
 Route::get('/formCreerVisiteur', 'CreerVisiteurController@AffFormCreerVisiteur');
 
 Route::post('/formCreerVisiteur', 'CreerVisiteurController@InsertVisiteur');
+
+// Modifier Les Informations Personnelles
+
+Route::get('/formModifInfo', 'CreerModifInfoController@affFormModifInfo');
+
+Route::post('/formModifInfo', 'CreerModifInfoController@ModifVisiteur');
+
 //afficher formulaire modif mdp
 /*Route::get('/modifMdp', function (){
     return view('formModifMdp');

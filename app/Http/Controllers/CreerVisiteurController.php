@@ -35,13 +35,23 @@ class CreerVisiteurController extends Controller
         $statut = 'V';
         
         
-        $res = $gsbFrais->InsertVisiteur($id, $nom, $prenom, $login, $mdp, $adresse, $telephone, $adresseMail, $cp, $ville, $dateEmbauche,$statut);
         
-         if(empty($res))
-            {
+       
+        $test = $gsbFrais->CompareTo($nom, $prenom);
+           if(empty($test))
+           {
                 $retour =  "Votre login : " . $login . " Votre mot de passe : ". $mdpnonhasher;
+                $gsbFrais->InsertVisiteur($id, $nom, $prenom, $login, $mdp, $adresse, $telephone, $adresseMail, $cp, $ville, $dateEmbauche,$statut);
                 return view('formCreerVisiteur', compact('erreur','retour'));
-             }
+               
+           }
+           else
+           {
+                $retour =  "Ce visiteur est déjà créer";
+                return view('formCreerVisiteur', compact('erreur','retour'));
+           }
+                
+             
              
      
           

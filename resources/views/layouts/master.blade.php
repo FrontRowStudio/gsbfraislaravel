@@ -44,7 +44,7 @@
 @if(Session::get('statut') == 'V')
                     <li><a href="{{ url('/saisirFraisForfait') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Renseigner fiche frais</a></li>
                     <li><a href="{{ url('/getListeFrais') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Voir Frais</a></li>
-                    <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in">Modifier mes informations personnelles</a></li>
+                    <li><a href="{{ url('/formModifInfo') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Modifier mes informations personnelles</a></li>
                     <li><a href="{{ url('/modifMdp') }}" data-toggle="collapse" data-target=".navbar-collapse.in">Modifier mot de passe</a></li>
 @else
                             <li><a href="{{url("/ValiderFicheFrais") }}" data-toggle="collapse" data-target=".navbar-collapse.in">Valider fiche de frais</a></li>

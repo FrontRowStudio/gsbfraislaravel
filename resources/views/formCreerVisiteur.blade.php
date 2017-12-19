@@ -33,19 +33,19 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Ville : </label>
             <div class="col-md-6 col-md-3">
-                <input type="text" name="ville" ng-model="ville" class="form-control" placeholder="Votre Ville" required>
+                <input type="text" name="ville" ng-model="ville" class="form-control" placeholder="Votre Ville" pattern="[A-Za-z-]{0,}" title="Saisir une ville avec des caractères alphabétique. " required>
             </div>
             
-            
+             
             <label class="col-md-1 control-label">Adresse Mail : </label>
             <div class="col-md-6 col-md-3">
-                <input type="mail" name="mail" ng-model="mail" class="form-control" placeholder="Votre adresse mail"  required>
+                <input type="mail" name="mail" ng-model="mail" class="form-control" placeholder="Votre adresse mail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"  title="Saisir une adresse mail de type : nom@domaine.extension "required>
             </div>
         </div>
              <div class="form-group">
             <label class="col-md-2 control-label">Téléphone : </label>
             <div class="col-md-6 col-md-3">
-                <input type="text" name="telephone" ng-model="telephone" class="form-control" placeholder="Votre Téléphone" required>
+                <input type="text" name="telephone" ng-model="telephone" class="form-control" placeholder="Votre Téléphone" pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$" title="Saisir un numéros de telephone de téléphone de type valide ex : +33669899638 , 0658987852" required>
             </div>
             
             
@@ -58,6 +58,7 @@
             <label class="col-md-2 control-label">ID : </label>
             <div class="col-md-6 col-md-3">
                 <input type="text" name="id" ng-model="id" class="form-control" placeholder="ID" pattern="[A-Za-z0-9]{4}" title="Saisir un ID de 4 caractères" required>
+                <p>*Saisir tous les champs pour valider .</p>
             </div>
             
             

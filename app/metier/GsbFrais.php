@@ -333,4 +333,26 @@ public function getInfosVisiteur($login, $mdp){
 		
     return strtolower($password);
 }
+
+    function CompareTo($nom ,$prenom)
+    {
+        $req="SELECT id , nom FROM visiteur where nom = :nom and prenom = :prenom";
+        $ligne = DB::select($req,['nom'=>$nom,'prenom'=>$prenom]);     
+        return $ligne;
+        
+    }
+    
+    function AfficherInfoModif($id)
+    {
+        $req="SELECT adresse,cp,ville ,adresseMail,telephone FROM visiteur where id = :id";
+        $ligne = DB::select($req,['id'=>$id]);     
+        return $ligne;
+        
+    }
+    
+    function MAJ_InfoPerso($id,$adresse,$cp,$ville,$adressemail,$telephone)
+    {
+        $req="UPDATE visiteur set adresse = :adresse , cp = :cp ,ville = :ville, adresseMail = :adressemail , telephone = :telephone where id = :id";
+        DB::update($req,['id'=>$id , 'adresse'=>$adresse,'cp'=>$cp,'ville'=>$ville,'adressemail'=>$adressemail,'telephone'=>$telephone]);     
+    }
 }
