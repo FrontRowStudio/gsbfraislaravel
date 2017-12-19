@@ -68,6 +68,14 @@ Route::get('/SuivreFrais_2/{id}', 'SuivreFraisController@GetSuivreFrais_2');
 //Suivre Frais Detail, affichage des détails des fiches
 Route::get('/SuivreFrais_Detail/{mois}/{idVisiteur}', 'SuivreFraisController@GetSuivreFrais_Detail');
 
+//Mettre a jour les frais
+Route::post('/MAJFrais', 'ValiderFraisController@MAJFrais');
+
+//Supprimer une ligne hors Forfait
+Route::get('/ValiderSupprimerFraisHForfait/{idVisiteur}/{mois}/{id}','ValiderFraisController@ValiderSupprFHF');
+
+Route::post('/SupprimerFraisHForfait','ValiderFraisController@SupprimerFHForfait');
+
 // Affiche Formulaire Créer Visiteur
 Route::get('/formCreerVisiteur', 'CreerVisiteurController@AffFormCreerVisiteur');
 

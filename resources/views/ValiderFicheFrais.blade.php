@@ -31,7 +31,7 @@
         </table>
 @else
 <div class="alert alert-info"
-<p>{{$erreur}}</p>
+     <p><span class="glyphicon glyphicon-exclamation-sign"></span> {{$erreur}}</p>
 </div>
 
 @endif

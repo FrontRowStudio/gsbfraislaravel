@@ -35,7 +35,7 @@ public function getInfosVisiteur($login, $mdp){
 */
 	public function getLesFraisHorsForfait($idVisiteur,$mois){
 	    $req = "select * from lignefraishorsforfait where lignefraishorsforfait.idvisiteur =:idVisiteur 
-		and lignefraishorsforfait.mois = :mois";	
+		and lignefraishorsforfait.mois = :mois and Supprimé = 0";	
             $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
 //            for ($i=0; $i<$nbLignes; $i++){
 //                    $date = $lesLignes[$i]['date'];
@@ -43,66 +43,52 @@ public function getInfosVisiteur($login, $mdp){
 //            }
             return $lesLignes; 
 	}
-/**
- * Retourne sous forme d'un tableau associatif toutes les lignes de frais au forfait
- * concernées par les deux arguments
- 
- * @param $idVisiteur 
- * @param $mois sous la forme aaaamm
- * @return un objet contenant les frais forfait du mois
-*/
-	public function getLesFraisForfait($idVisiteur, $mois){
-		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, ligneFraisForfait.mois as mois,
-		lignefraisforfait.quantite as quantite from lignefraisforfait inner join fraisforfait 
-		on fraisforfait.id = lignefraisforfait.idfraisforfait
-		where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois=:mois
-		order by lignefraisforfait.idfraisforfait";	
-//                echo $req;
-                $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
-		return $lesLignes;
-	}
-/**
- * Retourne tous les id de la table FraisForfait
- * @return un objet avec les données de la table frais forfait
-*/
-	public function getLesIdFrais(){
-		$req = "select fraisforfait.id as idfrais from fraisforfait order by fraisforfait.id";
-		$lesLignes = DB::select($req);
-		return $lesLignes;
-	}
-/**
- * Met à jour la table ligneFraisForfait
- 
- * Met à jour la table ligneFraisForfait pour un visiteur et
- * un mois donné en enregistrant les nouveaux montants
- 
- * @param $idVisiteur 
- * @param $mois sous la forme aaaamm
- * @param $lesFrais tableau associatif de clé idFrais et de valeur la quantité pour ce frais
-*/
-	public function majFraisForfait($idVisiteur, $mois, $lesFrais){
-		$lesCles = array_keys($lesFrais);
-    //            print_r($lesFrais);
-		foreach($lesCles as $unIdFrais){
-			$qte = $lesFrais[$unIdFrais];
-			$req = "update lignefraisforfait set lignefraisforfait.quantite = :qte
-			where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois = :mois
-			and lignefraisforfait.idfraisforfait = :unIdFrais";
-                        DB::update($req, ['qte'=>$qte, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois, 'unIdFrais'=>$unIdFrais]);
-		}
-		
-	}
         
-        /**
-         * 
-         * 
-         */
-	public function getVisiteurFicheCloturer()
+/**
+ * Calcul le montant total des frais forfait et hors forfait
+ 
+ * @param $FraisHorsForfait 
+ * @param $FraisForfait
+ * @return le total du montant calculé
+*/
+	public function CalculMontantTotal($FraisHorsForfait, $FraisForfait)
                 {
-		$req = "SELECT id,nom,prenom,fichefrais.mois,fichefrais.montantValide FROM `visiteur` INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur where fichefrais.idEtat = 'CL' ORDER BY prenom ASC";
-		$lesLignes = DB::select($req);
-		return $lesLignes;
-	}
+                        $montantTotal = 0;
+
+                        foreach ($FraisHorsForfait as $fhf)
+                        {
+                            $montantTotal +=$fhf->montant;
+                        }
+
+                        foreach ($FraisForfait as $ff)
+                        {
+                            $montantTotal += $ff->quantite * $ff->MontantUnit;                  
+                        }
+                        return $montantTotal;
+	}        
+        
+	public function MAJFrais($ETP, $KM,$NUI,$REP,$Id,$Mois)
+                    {
+                        $req =   "UPDATE lignefraisforfait SET quantite = ". $ETP ." WHERE lignefraisforfait.idVisiteur = '". $Id ."' AND lignefraisforfait.mois = '". $Mois ."' AND lignefraisforfait.idFraisForfait = 'ETP';";
+                        DB::update($req);                        
+                        $req =  "UPDATE lignefraisforfait SET quantite = ". $KM ." WHERE lignefraisforfait.idVisiteur = '". $Id ."' AND lignefraisforfait.mois = '". $Mois ."' AND lignefraisforfait.idFraisForfait = 'KM';";
+                        DB::update($req);
+                        $req =  "UPDATE lignefraisforfait SET quantite = ". $NUI ." WHERE lignefraisforfait.idVisiteur = '". $Id ."' AND lignefraisforfait.mois = '". $Mois ."' AND lignefraisforfait.idFraisForfait = 'NUI';";
+                        DB::update($req);            
+                        $req = "UPDATE lignefraisforfait SET quantite = ". $REP ." WHERE lignefraisforfait.idVisiteur = '". $Id ."' AND lignefraisforfait.mois = '". $Mois ."' AND lignefraisforfait.idFraisForfait = 'REP';";
+                        DB::update($req);
+
+                    }        
+                    
+                    public function SupprimerLigneFHForfait($id,$mois,$libelle,$montant,$motif)
+                            {
+                                $req = "UPDATE lignefraishorsforfait SET `Supprimé` = 1,Motif = '".$motif."' WHERE idVisiteur = '".$id."' and mois = '".$mois."' and libelle = '".$libelle."' and montant = '".$montant."'";
+                                DB::update($req);
+                            }
+        
+                  
+        
+
         
 /**
  * met à jour le nombre de justificatifs de la table ficheFrais
@@ -173,32 +159,7 @@ public function getInfosVisiteur($login, $mdp){
 		return $dernierMois;
 	}
 	
-/**
- * Crée une nouvelle fiche de frais et les lignes de frais au forfait pour un visiteur et un mois donnés
- 
- * récupère le dernier mois en cours de traitement, met à 'CL' son champs idEtat, crée une nouvelle fiche de frais
- * avec un idEtat à 'CR' et crée les lignes de frais forfait de quantités nulles 
- * @param $idVisiteur 
- * @param $mois sous la forme aaaamm
-*/
-	public function creeNouvellesLignesFrais($idVisiteur,$mois){
-		$dernierMois = $this->dernierMoisSaisi($idVisiteur);
-		$laDerniereFiche = $this->getLesInfosFicheFrais($idVisiteur,$dernierMois);
-		if($laDerniereFiche->idEtat=='CR'){
-				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');
-				
-		}
-		$req = "insert into fichefrais(idvisiteur,mois,nbJustificatifs,montantValide,dateModif,idEtat) 
-		values(:idVisiteur,:mois,0,0,now(),'CR')";
-		DB::insert($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
-		$lesIdFrais = $this->getLesIdFrais();
-		foreach($lesIdFrais as $uneLigneIdFrais){
-			$unIdFrais = $uneLigneIdFrais->idfrais;
-			$req = "insert into lignefraisforfait(idvisiteur,mois,idFraisForfait,quantite) 
-			values(:idVisiteur,:mois,:unIdFrais,0)";
-			DB::insert($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois, 'unIdFrais'=>$unIdFrais]);
-		 }
-	}
+
 /**
  * Crée un nouveau frais hors forfait pour un visiteur un mois donné
  * à partir des informations fournies en paramètre
@@ -228,6 +189,126 @@ public function getInfosVisiteur($login, $mdp){
                 $unFraisHF = $fraisHF[0];
                 return $unFraisHF;
 	}
+
+
+
+/** 
+ * Modifie l'état et la date de modification d'une fiche de frais
+ * Modifie le champ idEtat et met la date de modif à aujourd'hui
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+ */
+ 
+	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
+		$req = "update ficheFrais set idEtat = :etat, dateModif = now() 
+		where fichefrais.idvisiteur = :idVisiteur and fichefrais.mois = :mois";
+		DB::update($req, ['etat'=>$etat, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
+	}
+
+
+
+/**
+ * Retourne sous forme d'un tableau associatif toutes les lignes de frais au forfait
+ * concernées par les deux arguments
+ 
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+ * @return un objet contenant les frais forfait du mois
+*/
+	public function getLesFraisForfait($idVisiteur, $mois){
+		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, ligneFraisForfait.mois as mois,
+		lignefraisforfait.quantite as quantite, fraisforfait.montant as MontantUnit from lignefraisforfait inner join fraisforfait 
+		on fraisforfait.id = lignefraisforfait.idfraisforfait
+		where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois=:mois
+		order by lignefraisforfait.idfraisforfait";	
+//                echo $req;
+                $lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
+		return $lesLignes; 
+	}
+/**
+ * Retourne tous les id de la table FraisForfait
+ * @return un objet avec les données de la table frais forfait
+*/
+	public function getLesIdFrais(){
+		$req = "select fraisforfait.id as idfrais from fraisforfait order by fraisforfait.id";
+		$lesLignes = DB::select($req);
+		return $lesLignes;
+	}
+/**
+ * Met à jour la table ligneFraisForfait
+ 
+ * Met à jour la table ligneFraisForfait pour un visiteur et
+ * un mois donné en enregistrant les nouveaux montants
+ 
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+ * @param $lesFrais tableau associatif de clé idFrais et de valeur la quantité pour ce frais
+*/
+	public function majFraisForfait($idVisiteur, $mois, $lesFrais){
+		$lesCles = array_keys($lesFrais);
+    //            print_r($lesFrais);
+		foreach($lesCles as $unIdFrais){
+			$qte = $lesFrais[$unIdFrais];
+			$req = "update lignefraisforfait set lignefraisforfait.quantite = :qte
+			where lignefraisforfait.idvisiteur = :idVisiteur and lignefraisforfait.mois = :mois
+			and lignefraisforfait.idfraisforfait = :unIdFrais";
+                        DB::update($req, ['qte'=>$qte, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois, 'unIdFrais'=>$unIdFrais]);
+		}
+		
+	}
+        
+        /**
+         * 
+         * 
+         */
+	public function getVisiteurFicheCloturer()
+                {
+		$req = "SELECT id,nom,prenom,fichefrais.mois,fichefrais.montantValide FROM `visiteur` INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur where fichefrais.idEtat = 'CL' ORDER BY prenom ASC";
+		$lesLignes = DB::select($req);
+		return $lesLignes;
+	}
+        
+/**
+ * met à jour le nombre de justificatifs de la table ficheFrais
+ * pour le mois et le visiteur concerné
+ 
+         * 
+         * 
+         */
+                
+        
+
+ 
+
+/**
+ * Crée une nouvelle fiche de frais et les lignes de frais au forfait pour un visiteur et un mois donnés
+ 
+ * récupère le dernier mois en cours de traitement, met à 'CL' son champs idEtat, crée une nouvelle fiche de frais
+ * avec un idEtat à 'CR' et crée les lignes de frais forfait de quantités nulles 
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+*/
+	public function creeNouvellesLignesFrais($idVisiteur,$mois){
+		$dernierMois = $this->dernierMoisSaisi($idVisiteur);
+		$laDerniereFiche = $this->getLesInfosFicheFrais($idVisiteur,$dernierMois);
+		if($laDerniereFiche->idEtat=='CR'){
+				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');
+				
+		}
+		$req = "insert into fichefrais(idvisiteur,mois,nbJustificatifs,montantValide,dateModif,idEtat) 
+		values(:idVisiteur,:mois,0,0,now(),'CR')";
+		DB::insert($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
+		$lesIdFrais = $this->getLesIdFrais();
+		foreach($lesIdFrais as $uneLigneIdFrais){
+			$unIdFrais = $uneLigneIdFrais->idfrais;
+			$req = "insert into lignefraisforfait(idvisiteur,mois,idFraisForfait,quantite) 
+			values(:idVisiteur,:mois,:unIdFrais,0)";
+			DB::insert($req, ['idVisiteur'=>$idVisiteur, 'mois'=>$mois, 'unIdFrais'=>$unIdFrais]);
+		 }
+	}
+
+
+
 /**
  * Modifie frais hors forfait à partir de son id
  * à partir des informations fournies en paramètre
@@ -277,18 +358,7 @@ public function getInfosVisiteur($login, $mdp){
 		$lesLignes = DB::select($req, ['idVisiteur'=>$idVisiteur,'mois'=>$mois]);			
 		return $lesLignes[0];
 	}
-/** 
- * Modifie l'état et la date de modification d'une fiche de frais
- * Modifie le champ idEtat et met la date de modif à aujourd'hui
- * @param $idVisiteur 
- * @param $mois sous la forme aaaamm
- */
- 
-	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
-		$req = "update ficheFrais set idEtat = :etat, dateModif = now() 
-		where fichefrais.idvisiteur = :idVisiteur and fichefrais.mois = :mois";
-		DB::update($req, ['etat'=>$etat, 'idVisiteur'=>$idVisiteur, 'mois'=>$mois]);
-	}
+
         
         public function MiseajourBDD($login, $newmdp)
 {

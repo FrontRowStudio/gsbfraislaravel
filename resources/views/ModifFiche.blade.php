@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+{!! Form::open(['url' => 'MAJFrais']) !!}  
 <div class="container">
     <div class="col-md-8 col-sm-8">
         <div class="blanc">
@@ -29,7 +30,12 @@
             @endforeach
         </table>
         
-        <h3>Liste des frais forfait</h3>        
+        <h3>Liste des frais forfait</h3>
+@if($Maj != "")
+<div class="alert alert-info"
+<p><span class="glyphicon glyphicon-info-sign"></span> {{$Maj}}</p>
+</div>
+@endif
             <form action ="#">
                 <table class="table table-bordered table-striped table-responsive">
                     <thead>
@@ -41,27 +47,39 @@
             @foreach($lesFraisForfait as $unFF)
             <tr>   
                 <td> {{ $unFF->idfrais }} </td> 
-                <td> <input type="text" name ="{{$unFF->quantite}}" value="{{$unFF->quantite}}"> </td>>            
+                <td> <input type="text" name ="{{$unFF->idfrais}}" value="{{$unFF->quantite}}"> </td>   
             </tr>
             @endforeach
             </table>       
-            <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Mettre à jour la liste</button>                
+                <input type="hidden" name = "ID" value = "{{$uneFicheFrais->id}}">
+                <input type="hidden" name = "Mois" value="{{$uneFicheFrais->mois}}">
+                <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Mettre à jour la liste</button>       
         </form>
-
+{!! Form::close() !!}
+{!! Form::open(['url' => 'SupprimerFraisHForfait']) !!}  
         <h3>Liste des frais hors forfait</h3>
+        @if(isset($suppr))
+        <div class="alert alert-info"
+        <p><span class="glyphicon glyphicon-info-sign"></span> {{$suppr}}</p>
+        </div>
+        @endif        
         <table class="table table-bordered table-striped table-responsive">
             <thead>
                 <tr>
-                    <th>Libellé</th> 
-                    <th>Date</th> 
-                    <th>Montant</th>  
+                    <th>Libellé</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Supprimer</th>
                 </tr>
             </thead>
             @foreach($lesFraisHorsForfait as $unFHF)
-            <tr>   
-                <td> {{ $unFHF->libelle }} </td> 
-                <td> {{ $unFHF->date }} </td> 
-                <td> {{ $unFHF->montant }} </td>                 
+            <tr>
+            <form>                
+                <td><label> {{ $unFHF->libelle }} </label></td>
+                <td><label>  {{ $unFHF->date }} </label></td>
+                <td><label> {{ $unFHF->montant }} </label></td>
+                <td><a class="glyphicon glyphicon-remove" href="{{ url('/ValiderSupprimerFraisHForfait')}}/{{ $uneFicheFrais->id }}/{{$uneFicheFrais->mois}}/{{$unFHF->id}}" ></a></td>
+           </form>
             </tr>
             @endforeach
             <tr>
